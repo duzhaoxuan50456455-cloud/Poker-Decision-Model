@@ -218,3 +218,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project datasets and generated experiments
+data/raw/
+data/processed/
+artifacts/
+checkpoints/
+runs/
+*.pt
+*.pth
+*.safetensors

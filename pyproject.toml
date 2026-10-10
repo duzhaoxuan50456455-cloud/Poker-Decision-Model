@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "poker-decision-model"
+version = "0.1.0"
+description = "Context-conditioned probabilities over dynamic poker decision options"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = ["numpy>=2.0,<3", "pydantic>=2.10,<3"]
+
+[project.optional-dependencies]
+ml = ["torch>=2.6,<3", "transformers>=4.48,<5"]
+analysis = ["pandas>=2.2,<3", "scikit-learn>=1.6,<2", "jupyterlab>=4.3,<5", "matplotlib>=3.10,<4"]
+demo = ["streamlit>=1.42,<2"]
+llm = ["openai>=1.60,<3"]
+
+[dependency-groups]
+dev = ["pytest>=8.3,<10", "pytest-cov>=6,<8", "ruff>=0.11,<1", "mypy>=1.15,<2"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/poker_decision"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --cov=poker_decision --cov-report=term-missing"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+extend-exclude = ["docs/project-context.md"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src/poker_decision"]
