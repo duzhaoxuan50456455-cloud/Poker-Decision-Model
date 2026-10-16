@@ -1,7 +1,8 @@
 # Development setup and proposed conventions
 
-This repository is a skeleton. Module files contain placeholders only; the sole
-test verifies package import. No data contract or architecture is implemented.
+Meeting 1 implements the PokerBench data contract, preprocessing, grouped splits,
+CPU candidate baselines, and evaluation. The neural model and demo remain
+placeholders. See [integration notes](meeting1-integration.md) for the current workflow.
 
 ## Dependencies
 
@@ -20,9 +21,10 @@ packages. Document accelerator-specific PyTorch setup when training begins.
 Reference: [uv dependencies](https://docs.astral.sh/uv/concepts/projects/dependencies/)
 and [locking](https://docs.astral.sh/uv/concepts/projects/sync/).
 
-## Proposed boundaries
+## Package boundaries
 
-- `data.py`: record schema, loading, preprocessing, and group split utilities.
+- `data.py`: answer-free input schema, loading, preprocessing, validation, and grouped splits.
+- `pipeline.py`: reproducible preparation, inspection, output manifests, and CLI.
 - `models/`: encoder and shared candidate scorer; no generative vocabulary head.
 - `baselines.py`: simple baselines and eventual LLM comparison.
 - `evaluation.py`: quality, calibration, and performance measurements.
@@ -30,11 +32,26 @@ and [locking](https://docs.astral.sh/uv/concepts/projects/sync/).
 - `configs/`: reviewed experiment settings and provenance.
 - `notebooks/`: exploration; reusable logic moves into the package.
 
+## Notebooks in GitHub
+
+Keep one maintained walkthrough notebook for Meeting 1. It is teaching material
+that shows raw rows, decision examples, validation, metrics, and mistakes. Put
+reusable preprocessing, splitting, training, and evaluation in the Python package
+with tests; the notebook and command-line runner should call that same code.
+Future training scripts and the demo should import the package directly.
+
+Before committing a notebook, restart its kernel and run all cells, then clear
+outputs and execution counts. Commit the notebook source and supporting package
+changes together. Keep downloaded data, generated datasets, split manifests,
+metrics, and model files in the ignored output directories. Preserve links to the
+team's original notebooks in the integration notes instead of keeping competing
+copies of the pipeline in the repository.
+
 Keep data, weights, credentials, and generated reports out of Git. Pin backbone
 revisions and save tokenizer settings when models are introduced. Use opponent
 history available before each decision; group related hands/sessions in splits.
 
-## Future testing strategy
+## Testing strategy
 
 Pytest and coverage are configured; Ruff handles formatting/lint and mypy handles
 strict package typing. CI runs on Python 3.12 and 3.13. Add meaningful tests as
