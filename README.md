@@ -34,6 +34,26 @@ Inputs are `DecisionInputs(context, candidates)`; labels are stored separately a
 cards already dealt. See [integration notes](docs/meeting1-integration.md) for the
 source notebook comparison, data contract, baseline design, and limitations.
 
+## Run Meeting 2
+
+The canonical [Meeting 2 notebook](notebooks/02_pokerbench_decision_model.ipynb)
+combines four submissions into a joint state/question/options transformer, shared
+candidate head, required tiny-set learning check, training, checkpoint reload, and
+same-split comparison with all three CPU baselines.
+
+```sh
+uv sync --locked --extra analysis --extra ml
+uv run --locked --extra analysis --extra ml jupyter lab notebooks/02_pokerbench_decision_model.ipynb
+```
+
+BERT Mini is the pinned default; MiniLM and DistilBERT are alternatives. A GPU is
+recommended; CPU works for small experiments. It reuses the saved Meeting 1 split
+or prepares it if absent. Nothing is silently truncated or removed. Outputs go to
+an individual ignored `artifacts/pokerbench_meeting2/` run folder. For a smaller
+end-to-end check, launch Jupyter with `POKER_SMOKE=1`; this uses 128 training and 64
+validation examples and recomputes the baselines. See the notebook for Colab setup
+and [integration notes](docs/meeting2-integration.md) for attribution and limits.
+
 ## Development
 
 Python 3.12 is the team default; 3.13 is supported. Core parsing and evaluation
@@ -46,12 +66,14 @@ uv sync --locked
 uv run --locked pytest
 uv run --locked ruff check .
 uv run --locked ruff format --check .
-uv run --locked mypy
+uv run --locked mypy --exclude 'src/poker_decision/(training|models/encoder)\.py$'
+# With ML dependencies installed, check all modules:
+uv run --locked --extra analysis --extra ml mypy
 ```
 
 The learned-baseline tests run when the analysis extra is installed; CI checks
-both the core environment and the learned baseline. Raw data and generated
-reports stay out of Git.
+the core environment, learned baseline, and offline neural contracts. Raw data and
+generated reports stay out of Git.
 
 ## Layout
 
@@ -68,5 +90,5 @@ docs/                project context, development notes, integration decisions
 ```
 
 See [project context](docs/project-context.md), [development guide](docs/development.md),
-and [roadmap](docs/roadmap.md). Neural model training, opponent adaptation, and the
-demo remain future work. Baseline scores measure reference-action agreement.
+and [roadmap](docs/roadmap.md). Neural training is introduced in Meeting 2;
+opponent adaptation and the demo remain future work. Scores measure reference-action agreement.

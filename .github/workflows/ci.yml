@@ -17,7 +17,7 @@ jobs:
       - run: uv sync --locked
       - run: uv run --locked ruff check .
       - run: uv run --locked ruff format --check .
-      - run: uv run --locked mypy
+      - run: uv run --locked mypy --exclude 'src/poker_decision/(training|models/encoder)\.py$'
       - run: uv run --locked pytest
   analysis:
     runs-on: ubuntu-latest
@@ -29,3 +29,14 @@ jobs:
           enable-cache: true
       - run: uv sync --locked --extra analysis
       - run: uv run --locked --extra analysis pytest
+  ml:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.12'
+          enable-cache: true
+      - run: uv sync --locked --extra analysis --extra ml
+      - run: uv run --locked --extra analysis --extra ml mypy
+      - run: uv run --locked --extra analysis --extra ml pytest

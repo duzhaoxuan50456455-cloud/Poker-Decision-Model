@@ -26,3 +26,31 @@ Generated data, split manifests, metrics, and five errors stay in ignored
 See [integration notes](../docs/meeting1-integration.md) for source contributions and
 limitations. Keep notebook outputs cleared in Git and import the installed package
 rather than modifying Python's import path.
+
+## Meeting 2
+
+Continue with [Meeting 2: single-pass decision model](02_pokerbench_decision_model.ipynb),
+consolidated from three shared Colabs and the local `week2.ipynb` submission.
+
+```sh
+uv sync --locked --extra analysis --extra ml
+uv run --locked --extra analysis --extra ml jupyter lab notebooks/02_pokerbench_decision_model.ipynb
+```
+
+The notebook explains the input adapter, joint serialization, candidate token spans,
+mean pooling, shared head, candidate padding, and raw-logit cross-entropy. It requires
+a tiny training-set learning check, resets the model for real training, selects a
+checkpoint by validation log loss, reloads it, compares all baselines, shows five
+mistakes, and measures candidate-order sensitivity. Encoder revisions are pinned.
+
+Use Colab's GPU runtime or a local ML environment. The Colab bootstrap clones the
+repository only if needed; the Meeting 2 changes must be published before that
+route works. Existing local checkouts work immediately. `POKER_SMOKE=1` before
+launching Jupyter selects 128 train / 64 validation rows for quick verification;
+all baselines are refitted on that selected training subset. Normal runs reuse
+the complete saved Meeting 1 membership. If absent, preparation uses Meeting 1 defaults.
+
+Generated checkpoints, split copies, training history, comparisons, probabilities,
+and errors live under `artifacts/pokerbench_meeting2/<backbone>-<timestamp>/`.
+No official test data is loaded and no tokenization failures are silently skipped.
+See [Meeting 2 integration notes](../docs/meeting2-integration.md).

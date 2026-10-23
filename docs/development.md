@@ -1,8 +1,9 @@
 # Development setup and proposed conventions
 
 Meeting 1 implements the PokerBench data contract, preprocessing, grouped splits,
-CPU candidate baselines, and evaluation. The neural model and demo remain
-placeholders. See [integration notes](meeting1-integration.md) for the current workflow.
+CPU candidate baselines, and evaluation. Meeting 2 adds the joint transformer and
+training walkthrough. The demo remains a placeholder. See the
+[Meeting 1](meeting1-integration.md) and [Meeting 2](meeting2-integration.md) integration notes.
 
 ## Dependencies
 
@@ -34,11 +35,18 @@ and [locking](https://docs.astral.sh/uv/concepts/projects/sync/).
 
 ## Notebooks in GitHub
 
-Keep one maintained walkthrough notebook for Meeting 1. It is teaching material
+Keep one maintained walkthrough notebook per meeting. Meeting 1 is teaching material
 that shows raw rows, decision examples, validation, metrics, and mistakes. Put
 reusable preprocessing, splitting, training, and evaluation in the Python package
 with tests; the notebook and command-line runner should call that same code.
 Future training scripts and the demo should import the package directly.
+
+Meeting 2 calls `models/encoder.py` for joint tokenization, candidate pooling and
+scoring, and `training.py` for training, saved-split loading, batched prediction,
+and self-contained checkpoints. Install both `analysis` and `ml` extras for this
+notebook and full mypy checks. Core-only mypy excludes these two optional ML modules;
+the separate ML CI job checks all modules and runs offline randomly initialized
+BERT tests without fetching pretrained weights.
 
 Before committing a notebook, restart its kernel and run all cells, then clear
 outputs and execution counts. Commit the notebook source and supporting package
