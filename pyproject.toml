@@ -8,11 +8,16 @@ version = "0.1.0"
 description = "Context-conditioned probabilities over dynamic poker decision options"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
-dependencies = ["numpy>=2.0,<3", "pydantic>=2.10,<3"]
+dependencies = [
+    "numpy>=2.0,<3",
+    "pandas>=2.3.3",
+    "pydantic>=2.10,<3",
+    "torch>=2.14.1",
+]
 
 [project.optional-dependencies]
 ml = ["torch>=2.6,<3", "transformers>=4.48,<5"]
-analysis = ["pandas>=2.2,<3", "scikit-learn>=1.6,<2", "jupyterlab>=4.3,<5", "matplotlib>=3.10,<4"]
+analysis = ["datasets>=3,<5", "pandas>=2.2,<3", "scikit-learn>=1.6,<2", "jupyterlab>=4.3,<5", "matplotlib>=3.10,<4"]
 demo = ["streamlit>=1.42,<2"]
 llm = ["openai>=1.60,<3"]
 
